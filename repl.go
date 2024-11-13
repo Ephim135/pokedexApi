@@ -11,7 +11,7 @@ import (
 )
 
 type config struct {
-	pokeapiCache	pokeCache
+	pokeapiCache	pokecache.Cache
 	pokeapiClient    pokeapi.Client
 	nextLocationsURL *string
 	prevLocationsURL *string
