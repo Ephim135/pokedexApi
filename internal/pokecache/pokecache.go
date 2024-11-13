@@ -19,7 +19,7 @@ type cacheEntry struct {
 func NewCache(interval time.Duration) *Cache {
 	cache := &Cache{
 		mu: var mu sync.Mutex
-		items: make(map[string]cacheEntry),
+		cacheEntries: make(map[string]cacheEntry),
 		interval: interval,
 	}
 	go cache.startCleanup()
@@ -44,6 +44,12 @@ func (c Cache) startCleanup() (){
 	for range ticker.C {
 		c.mu.Lock()
 		defer c.mu.Unlock()
-
+		// Loop over Entries in Cache
+		for key, _ := range c.cacheEntries {
+			duration := Since(c.cacheEntries[key].createdAt)
+			if duration > c.interval {
+				delete(c.cacheEntries, key)
+			}
 	}
+}
 }

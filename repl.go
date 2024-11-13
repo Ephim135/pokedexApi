@@ -6,10 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bootdotdev/go-api-gate/courses/projects/pokedexcli/internal/pokeapi"
+	"github.com/Ephim135/pokedexApi/internal/pokeapi"
+	"github.com/Ephim135/pokedexApi/internal/pokecache"
 )
 
 type config struct {
+	pokeapiCache	pokeCache
 	pokeapiClient    pokeapi.Client
 	nextLocationsURL *string
 	prevLocationsURL *string
