@@ -7,14 +7,13 @@ import (
 	"strings"
 
 	"github.com/Ephim135/pokedexApi/internal/pokeapi"
-	"github.com/Ephim135/pokedexApi/internal/pokecache"
 )
 
 type config struct {
-	pokeapiCache     pokecache.Cache
 	pokeapiClient    pokeapi.Client
 	nextLocationsURL *string
 	prevLocationsURL *string
+	caughtPokemon    map[string]pokeapi.RespShallowPokemonStats
 }
 
 func startRepl(cfg *config) {
@@ -29,10 +28,14 @@ func startRepl(cfg *config) {
 		}
 
 		commandName := words[0]
+		args := []string{}
+		if len(words) > 1 {
+			args = words[1:]
+		}
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(cfg, words[1:]...)
+			err := command.callback(cfg, args...)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -79,9 +82,24 @@ func getCommands() map[string]cliCommand {
 			callback:    commandExit,
 		},
 		"explore": {
-			name:        "explore",
+			name:        "explore <location-area>",
 			description: "show pokemon in areas",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <Pokemon-Name>",
+			description: "try to catch a Pokemon",
+			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect <Pokemon-Name>",
+			description: "display Pokemon Stats",
+			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "view all cauhgt Pokemon",
+			callback:    commandPokedex,
 		},
 	}
 }
